@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ticket Booking</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .footer {
+          margin-top: 50px;
+          background-color: #343a40;
+          color: white;
+          padding: 20px 0;
+          bottom: 0;
+          width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Booking System</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Pricing</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mb-10">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header bg-dark text-white text-center">
+                    <h2>Chuyến tàu sinh tử</h2>
+                  </div>
+                  <div class="card-body">
+                    <img src="https://imagev3.vietnamplus.vn/Uploaded/2024/fsmsy/2016_04_19/titanicsinkingunderwater.jpg.webp" alt="" style="width: 100%; height: auto;">
+                  </div>
+                </div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                            <div class="alert alert-success alert-dismissible fade show m-2">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <strong>{{ message }}</strong>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-danger alert-dismissible fade show m-2">
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                <strong>{{ message }}</strong>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-dark text-white text-center"><h3>Vui lòng điền các thông tin cần thiết </h3>
+                      <p>
+                        chúng tôi sẽ đánh giá khả năng sống sót của bạn
+                      </p></div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'home:predict' %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="is_married">Tình trạng hôn nhân:</label>
+                                        <select class="form-control" id="is_married" name="is_married">
+                                            <option value="0" {% if passenger_dict and passenger_dict.Is_Married.0 == 0 %}selected{% endif %}>Chưa kết hôn</option>
+                                            <option value="1" {% if passenger_dict and passenger_dict.Is_Married.0 == 1 %}selected{% endif %}>Đã kết hôn</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="pclass">Hạng vé:</label>
+                                        <select class="form-control" id="pclass" name="pclass">
+                                            <option value="1" {% if passenger_dict and passenger_dict.Pclass.0 == 1 %}selected{% endif %}>1</option>
+                                            <option value="2" {% if passenger_dict and passenger_dict.Pclass.0 == 2 %}selected{% endif %}>2</option>
+                                            <option value="3" {% if passenger_dict and passenger_dict.Pclass.0 == 3 %}selected{% endif %}>3</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sex">Giới tính:</label>
+                                        <select class="form-control" id="sex" name="sex">
+                                            <option value="1" {% if passenger_dict and passenger_dict.Sex.0 == 1 %}selected{% endif %}>Female</option>
+                                            <option value="2" {% if passenger_dict and passenger_dict.Sex.0 == 2 %}selected{% endif %}>Male</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="deck">Khu vực phòng ở:</label>
+                                        <select class="form-control" id="deck" name="deck">
+                                            <option value="1" {% if passenger_dict and passenger_dict.Deck.0 == 1 %}selected{% endif %}>A_B_C</option>
+                                            <option value="2" {% if passenger_dict and passenger_dict.Deck.0 == 2 %}selected{% endif %}>D_E</option>
+                                            <option value="3" {% if passenger_dict and passenger_dict.Deck.0 == 3 %}selected{% endif %}>F_G</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="embarked">Nơi lên tàu:</label>
+                                        <select class="form-control" id="embarked" name="embarked">
+                                            <option value="1" {% if passenger_dict and passenger_dict.Embarked.0 == 1 %}selected{% endif %}>C</option>
+                                            <option value="2" {% if passenger_dict and passenger_dict.Embarked.0 == 2 %}selected{% endif %}>Q</option>
+                                            <option value="3" {% if passenger_dict and passenger_dict.Embarked.0 == 3 %}selected{% endif %}>S</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="age">Tuổi:</label>
+                                        <input type="number" class="form-control" id="age" name="age" value="{% if passenger_dict %}{{ passenger_dict.Age.0 }}{% endif %}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ticket_frequency">Số lượng vé:</label>
+                                        <input type="number" class="form-control" id="ticket_frequency" name="ticket_frequency" value="{% if passenger_dict %}{{ passenger_dict.Ticket_Frequency.0 }}{% endif %}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="family_sizes">Số người thân đi cùng:</label>
+                                        <input type="number" class="form-control" id="family_sizes" name="family_sizes" value="{% if passenger_dict %}{{ passenger_dict.Family_Size_Grouped.0 }}{% endif %}" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="fare">Giá vé:</label>
+                                        <input type="number" class="form-control" id="fare" name="fare" value="{% if passenger_dict %}{{ passenger_dict.Fare.0 }}{% endif %}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-dark">Submit</button>
+                            <button type="button" class="btn btn-dark" onclick="window.location.href='{% url 'home:home' %}'">Cancel</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <span>&copy; 2024 Booking System. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
